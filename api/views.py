@@ -16,7 +16,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 
 
-
+# FOR CRUD OPERATIONS
 class post_list(APIView):
     def get(self, request):
         posts = Posts.objects.all()
@@ -30,7 +30,7 @@ class post_list(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+#FOR CRUD OPERATION 
 class post_detail(APIView):
     def get_object(self, pk):
         try:
@@ -58,7 +58,7 @@ class post_detail(APIView):
 
                 
 
-
+# FOR LOGIN API
 class api_login(APIView):
     def post(self, request):
         serializer = LoginSerializers(data=request.data)
@@ -66,14 +66,13 @@ class api_login(APIView):
             user = serializer.validated_data['user']
             api_login(user=user.username)
             token, created = Token.objects.get_or_create(user=user)
-        return Response({'token':token.key}, status=status.HTTP_201_CREATED)
+        return Response({'token':token.key, 'user':user.username}, status=status.HTTP_201_CREATED)
    
 
 
 class api_logout(APIView):
     authentication_classes = (TokenAuthentication)
-
-    def post(self, request):
+    def post(self,request):
         api_logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
