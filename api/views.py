@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from post.models import Posts
-from .serializers import PostsSerializers
+from .serializers import PostsSerializers, LoginSerializers
 
 # using APIView for class based function
 from rest_framework.views import APIView
@@ -9,6 +9,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
+
+#For login, logout, token generation and token authentication
+from django.contrib.auth import login as api_login, logout as api_logout
+from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
+
 
 
 class post_list(APIView):
@@ -53,8 +59,24 @@ class post_detail(APIView):
                 
 
 
+class api_login(APIView):
+    def post(self, request):
+        serializer = LoginSerializers(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.validated_data['user']
+            api_login(user=user.username)
+            token, created = Token.objects.get_or_create(user=user)
+        return Response({'token':token.key}, status=status.HTTP_201_CREATED)
+   
 
 
-     
+class api_logout(APIView):
+    authentication_classes = (TokenAuthentication)
+
+    def post(self, request):
+        api_logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+def login(request):
+    return render(request, 'login.html')

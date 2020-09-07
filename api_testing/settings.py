@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'post',
     'api',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'api_testing.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,6 +71,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api_testing.wsgi.application'
+
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES':(
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+
+#     'DEFAULT_PERMISSION_CLASSES':(
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+
+# }
 
 
 # Database
